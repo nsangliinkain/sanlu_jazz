@@ -36,11 +36,11 @@
     <div class="grid md:grid-cols-3 gap-8">
         @forelse($eventi as $evento)
             <div class="bg-white rounded-xl shadow hover:shadow-lg transition">
-                <img src="https://source.unsplash.com/400x250/?jazz,concert" alt="{{ $evento->title }}" class="rounded-t-xl w-full h-48 object-cover">
+                <img src="{{ $evento ->image_url}}" alt="{{ $evento->titolo }}" class="rounded-t-xl w-full h-48 object-cover">
                 <div class="p-4">
-                    <h4 class="text-xl font-semibold">{{ $evento->title }}</h4>
-                    <p class="text-gray-600 mt-2">{{ $evento->location }} - {{ \Carbon\Carbon::parse($evento->date)->format('d M Y') }}</p>
-                    <p class="text-indigo-600 font-bold mt-2">€{{ number_format($evento->price, 2, ',', '.') }}</p>
+                    <h4 class="text-xl font-semibold">{{ $evento->titolo }}</h4>
+                    <p class="text-gray-600 mt-2">{{ $evento->luogo }} - {{ \Carbon\Carbon::parse($evento->data)->format('d M Y') }}</p>
+                    <p class="text-indigo-600 font-bold mt-2">€{{ number_format($evento->prezzo, 2, ',', '.') }}</p>
                     <div class="mt-4">
                         <form action="{{ route('tickets.store', $evento->id) }}" method="POST">
                             @csrf

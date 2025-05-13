@@ -16,7 +16,7 @@
                     <x-nav-link :href="url('/')" :active="request()->is('/')">
                         {{ __('Home') }}
                     </x-nav-link>
-                    <x-nav-link :href="url('/#eventi')" :active="request()->is('eventi')">
+                    <x-nav-link :href="url('/eventi')" :active="request()->is('eventi')">
                         {{ __('Eventi') }}
                     </x-nav-link>
                 </div>

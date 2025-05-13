@@ -9,10 +9,8 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Support\Facades\Auth;
 
-Route::get('/', function () {
-    $eventi = Event::all();
-    return view('home', compact('eventi'));
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/eventi', [HomeController::class, 'eventi'])->name('eventi');
 
 Route::post('/eventi/{evento}/prenota', [TicketController::class, 'store'])
     ->middleware('auth')
