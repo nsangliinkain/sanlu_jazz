@@ -1,62 +1,108 @@
 <?php
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class LoginController extends Controller
 {
-    // Mostra il modulo di login
+    /**
+     * Where to redirect users after login.
+     *
+     * @var string
+     */
+    protected $redirectTo = '/dashboard';
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('guest')->except('logout');
+    }
+
+    /**
+     * Show the application's login form.
+     *
+     * @return \Illuminate\View\View
+     */
     public function showLoginForm()
     {
         return view('auth.login');
     }
 
-    // Esegui il login
+    /**
+     * Handle a login request to the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
+     */
     public function login(Request $request)
     {
-        // Log per debugging
-        \Log::info('Tentativo di login con email: ' . $request->email);
-        
-        // Validazione dei dati
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|min:6',
-        ]);
+        $this->validateLogin($request);
 
-        // Tentativo di login
-        if (Auth::attempt($credentials)) {
-            // Rigenera la sessione per prevenire attacchi di fixation
-            $request->session()->regenerate();
+        // Get the user by email
+        $user = User::where('email', $request->email)->first();
+        
+        if ($user && $user->password === $request->password) {
+            // Manually log in the user
+            Auth::login($user);
             
-            $user = Auth::user();
-            \Log::info('Login riuscito per l\'utente: ' . $user->email . ' (ID: ' . $user->id . ')');
-            
-            return redirect()->intended(route('dashboard'))->with('success', 'Login effettuato con successo!');
+            // Redirect to intended page or default
+            return redirect()->intended($this->redirectTo);
         }
 
-        \Log::warning('Tentativo di login fallito per email: ' . $request->email);
-        
-        // Se l'autenticazione fallisce
-        return back()
-            ->withErrors(['email' => 'Le credenziali inserite non sono corrette.'])
-            ->withInput($request->except('password'));
+        // Authentication failed
+        return $this->sendFailedLoginResponse($request);
     }
 
-    // Logout
+    /**
+     * Validate the user login request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return void
+     */
+    protected function validateLogin(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|string|email',
+            'password' => 'required|string',
+        ]);
+    }
+
+    /**
+     * Get the failed login response instance.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    protected function sendFailedLoginResponse(Request $request)
+    {
+        return back()
+            ->withInput($request->only('email', 'remember'))
+            ->withErrors([
+                'email' => 'Le credenziali fornite non corrispondono ai nostri record.',
+            ]);
+    }
+
+    /**
+     * Log the user out of the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
+     */
     public function logout(Request $request)
     {
-        \Log::info('Logout effettuato per l\'utente: ' . Auth::user()->email);
-        
         Auth::logout();
-        
-        // Invalidate la sessione
+
         $request->session()->invalidate();
-        
-        // Rigenera il token CSRF
         $request->session()->regenerateToken();
-        
-        return redirect('/')->with('success', 'Logout effettuato con successo!');
+
+        return redirect('/');
     }
 }

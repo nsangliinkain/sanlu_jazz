@@ -5,65 +5,87 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class RegisterController extends Controller
 {
-    // Mostra il modulo di registrazione
+    /**
+     * Where to redirect users after registration.
+     *
+     * @var string
+     */
+    protected $redirectTo = '/dashboard';
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('guest');
+    }
+
+    /**
+     * Show the application registration form.
+     *
+     * @return \Illuminate\View\View
+     */
     public function showRegistrationForm()
     {
         return view('auth.register');
     }
 
-    // Esegui la registrazione
+    /**
+     * Handle a registration request for the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+     */
     public function register(Request $request)
     {
-        // Log per debugging
-        \Log::info('Tentativo di registrazione con i dati:', $request->all());
-        
-        // Validazione dei dati
-        $validator = Validator::make($request->all(), [
-            'nome' => 'required|string|max:100',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
-            'ruolo' => 'required|in:spettatore,artista,admin',
+        $this->validator($request->all())->validate();
+
+        $user = $this->create($request->all());
+
+        Auth::login($user);
+
+        return redirect($this->redirectTo);
+    }
+
+    /**
+     * Get a validator for an incoming registration request.
+     *
+     * @param  array  $data
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    protected function validator(array $data)
+    {
+        return Validator::make($data, [
+            'nome' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:6', 'confirmed'],
+            'ruolo' => ['required', 'string', 'in:spettatore,artista,admin'],
         ]);
+    }
 
-        if ($validator->fails()) {
-            \Log::warning('Errori di validazione:', $validator->errors()->toArray());
-            return back()->withErrors($validator)->withInput();
-        }
-
-        // Avvolgiamo la creazione dell'utente in una transazione DB
-        try {
-            DB::beginTransaction();
-            
-            // Creazione dell'utente
-            $user = User::create([
-                'nome' => $request->nome,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-                'ruolo' => $request->ruolo,
-            ]);
-            
-            \Log::info('Utente creato con successo. ID: ' . $user->id);
-            
-            DB::commit();
-            
-            // Login automatico dopo la registrazione
-            Auth::login($user);
-            
-            \Log::info('Login automatico effettuato per l\'utente: ' . $user->email);
-            
-            return redirect()->route('dashboard')->with('success', 'Registrazione completata con successo!');
-            
-        } catch (\Exception $e) {
-            DB::rollBack();
-            \Log::error('Errore durante la registrazione: ' . $e->getMessage());
-            return back()->with('error', 'Si è verificato un errore durante la registrazione. Riprova più tardi.')->withInput();
-        }
+    /**
+     * Create a new user instance after a valid registration.
+     *
+     * @param  array  $data
+     * @return \App\Models\User
+     */
+    protected function create(array $data)
+    {
+        // Since we're not using bcrypt in the existing database
+        // we'll store passwords as-is here as well for consistency
+        return User::create([
+            'nome' => $data['nome'],
+            'email' => $data['email'],
+            'password' => $data['password'],
+            'ruolo' => $data['ruolo'],
+        ]);
     }
 }
