@@ -14,9 +14,9 @@
     <section class="relative text-white py-24 px-6 text-center bg-cover bg-center" style="background-image: url('https://source.unsplash.com/1600x900/?jazz,stage');">
         <div class="absolute inset-0 bg-indigo-900 bg-opacity-70"></div>
         <div class="relative z-10">
-            <h2 class="text-4xl font-bold mb-4">Scopri il meglio del Jazz dal vivo 🎶</h2>
+            <h2 class="text-4xl font-bold mb-4">Scopri il meglio della musica dal vivo</h2>
             <p class="text-lg mb-6">Partecipa a eventi, segui i tuoi artisti preferiti e vivi esperienze musicali indimenticabili.</p>
-            <a href="#eventi" class="bg-white text-indigo-600 font-semibold px-6 py-3 rounded-full shadow hover:bg-gray-100 transition">
+            <a href="/eventi" class="bg-white text-indigo-600 font-semibold px-6 py-3 rounded-full shadow hover:bg-gray-100 transition">
                 Esplora gli Eventi
             </a>
         </div>
@@ -26,7 +26,7 @@
     <section class="bg-white py-16 px-6 text-center">
         <h3 class="text-2xl font-bold mb-4">🎷 Chi Siamo</h3>
         <p class="text-gray-700 max-w-2xl mx-auto">
-            Sanlu's Jazz è una piattaforma dedicata agli amanti del jazz. Offriamo informazioni su eventi dal vivo, artisti emergenti e festival imperdibili in tutta Italia. Il nostro obiettivo è far vibrare le emozioni attraverso la musica dal vivo.
+            Sanlu's Jazz è una piattaforma dedicata agli amanti del jazz, ma non solo. Offriamo informazioni su eventi dal vivo, artisti emergenti e festival imperdibili in tutta Italia. Il nostro obiettivo è far vibrare le emozioni attraverso la musica dal vivo.
         </p>
     </section>
 

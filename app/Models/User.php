@@ -63,4 +63,8 @@ class User extends Authenticatable
     {
         $this->attributes['password'] = $value;
     }
+
+    public function tickets() {
+        return $this->hasMany(Ticket::class);
+    }
 }

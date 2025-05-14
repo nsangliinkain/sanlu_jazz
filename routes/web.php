@@ -23,12 +23,13 @@ Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logou
 Route::get('/register', [App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [App\Http\Controllers\Auth\RegisterController::class, 'register']);
 
-// Rotte protette che richiedono autenticazione
-Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'show'])->name('dashboard');
+    Route::get('/dashboard/admin', fn () => view('dashboards.admin'))->name('dashboard.admin');
+    Route::get('/dashboard/artista', fn () => view('dashboards.artista'))->name('dashboard.artista');
+    Route::get('/dashboard/spettatore', fn () => view('dashboards.spettatore'))->name('dashboard.spettatore');
 });
 
+Route::get('/admin', [AdminController::class, 'index'])->middleware('auth', 'is_admin');
 
-Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit')->middleware('auth');
+Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
