@@ -30,13 +30,13 @@
 
                 <hr class="my-3">
 
-                <p class="font-semibold text-indigo-700">🎤 Artisti Coinvolti:</p>
+                <p class="font-semibold text-indigo-700">🎤 Artista:</p>
                 <ul class="list-disc list-inside text-gray-700 mb-2">
-                    @forelse($evento->artisti as $artista)
-                        <li>{{ $artista->nome }}</li>
-                    @empty
+                    @if($evento->artista)
+                        <li>{{ $evento->artista->nome }}</li>
+                    @else
                         <li>Nessun artista associato</li>
-                    @endforelse
+                    @endif
                 </ul>
 
                 <p class="font-semibold text-indigo-700">🎼 Generi:</p>

@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -24,11 +26,11 @@ class LoginController extends Controller
             Auth::login($user);
 
             if ($user->ruolo === 'admin') {
-                return redirect()->route('dashboard.admin');
+                return redirect()->route('dashboards.admin');
             } elseif ($user->ruolo === 'artista') {
-                return redirect()->route('dashboard.artista');
+                return redirect()->route('dashboards.artista');
             } else {
-                return redirect()->route('dashboard.spettatore');
+                return redirect()->route('dashboards.spettatore');
             }
         }
 
