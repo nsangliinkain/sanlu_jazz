@@ -47,24 +47,13 @@
                     <input type="password" name="password_confirmation" id="password_confirmation" class="w-full p-2 border border-gray-300 rounded" required>
                 </div>
 
-                <div class="mb-6">
-                    <label for="ruolo" class="block text-sm font-medium text-gray-700">Ruolo</label>
-                    <select name="ruolo" id="ruolo" class="w-full p-2 border @error('ruolo') border-red-500 @else border-gray-300 @enderror rounded" required>
-                        <option value="">-- Seleziona un ruolo --</option>
-                        <option value="spettatore" {{ old('ruolo') == 'spettatore' ? 'selected' : '' }}>Spettatore</option>
-                        <option value="artista" {{ old('ruolo') == 'artista' ? 'selected' : '' }}>Artista</option>
-                        <option value="admin" {{ old('ruolo') == 'admin' ? 'selected' : '' }}>Admin</option>
-                    </select>
-                    @error('ruolo')
-                        <span class="text-red-600 text-sm mt-1">{{ $message }}</span>
-                    @enderror
-                </div>
-
                 <div class="mb-4">
                     <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded transition duration-200">
                         Registrati
                     </button>
                 </div>
+
+                <p>Sei un artista? <a href="{{ route('register.artist') }}" class="text-indigo-600 hover:underline">Registrati come artista</a></p>
             </form>
         </div>
 

@@ -26,11 +26,11 @@ class LoginController extends Controller
             Auth::login($user);
 
             if ($user->ruolo === 'admin') {
-                return redirect()->route('dashboards.admin');
+                return redirect()->route('dashboard.admin');
             } elseif ($user->ruolo === 'artista') {
-                return redirect()->route('dashboards.artista');
+                return redirect()->route('dashboard.artista');
             } else {
-                return redirect()->route('dashboards.spettatore');
+                return redirect()->route('dashboard.spettatore');
             }
         }
 

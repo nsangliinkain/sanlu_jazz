@@ -10,27 +10,70 @@ use Carbon\Carbon;
 
 class TicketController extends Controller
 {
-    // Funzione per prenotare un biglietto
-    public function store(Request $request, Event $evento)
+    public function store($eventoId)
     {
-        // Controllo se ci sono posti disponibili
-        if ($evento->posti_disponibili < 1) {
-            return back()->with('error', 'I posti per questo evento sono esauriti.');
+        if (auth()->user()->ruolo === 'admin' || auth()->user()->ruolo === 'artista') {
+            return back()->with('error', 'Solo gli spettatori possono acquistare biglietti.');
         }
 
-        // Creazione del biglietto
-        $ticket = new Ticket();
-        $ticket->user_id = Auth::id();  // id dell'utente loggato
-        $ticket->event_id = $evento->id;
-        $ticket->codice = strtoupper(Str::random(10)); // codice del biglietto
-        $ticket->prezzo = $evento->prezzo;
-        $ticket->save();
+        $user = auth()->user();
+        $evento = Event::findOrFail($eventoId);
 
-        // Aggiornamento dei posti disponibili
-        $evento->posti_disponibili -= 1;
-        $evento->save();
+        // Controlla se l'utente ha già prenotato questo evento
+        $giaprenotato = Ticket::where('user_id', $user->id)
+            ->where('event_id', $evento->id)
+            ->exists();
 
-        // Ritorno alla dashboard con un messaggio di successo
-        return redirect()->route('dashboard')->with('success', 'Biglietto acquistato con successo!');
+        if ($giaprenotato) {
+            return back()->with('error', 'Hai già prenotato questo evento.');
+        }
+
+        $capienza = $evento->posti_disponibili;
+        $venduti = Ticket::where('event_id', $evento->id)->count();
+
+        // Debug temporaneo
+        // dd(['capienza' => $capienza, 'venduti' => $venduti]);
+
+        if ($venduti >= $capienza) {
+            return back()->with('error', 'Posti esauriti per questo evento.');
+        }
+
+        $numero_posto = $venduti + 1;
+        $codice = strtoupper(bin2hex(random_bytes(5)));
+
+        Ticket::create([
+            'user_id'      => $user->id,
+            'event_id'     => $evento->id,
+            'codice'       => $codice,
+            'data_acquisto'=> now(),
+            'prezzo'       => $evento->prezzo,
+            'numero_posto' => $numero_posto,
+        ]);
+
+        return back()->with('success', 'Biglietto acquistato con successo! Il tuo posto è il numero ' . $numero_posto);
+    }
+
+    public function destroy($id)
+    {
+        $ticket = Ticket::where('id', $id)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+
+        $ticket->delete(); // Questo elimina davvero il record
+        return back()->with('success', 'Biglietto cancellato con successo.');
+    }
+
+    public function showAssegnaArtisti($eventoId)
+    {
+        $evento = Event::findOrFail($eventoId);
+        $artisti = User::where('ruolo', 'artista')->get();
+        return view('admin.assegna_artisti', compact('evento', 'artisti'));
+    }
+
+    public function assegnaArtisti(Request $request, $eventoId)
+    {
+        $evento = Event::findOrFail($eventoId);
+        $evento->artisti()->sync($request->input('artisti', []));
+        return back()->with('success', 'Artisti assegnati con successo!');
     }
 }

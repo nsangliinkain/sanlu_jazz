@@ -5,7 +5,7 @@
             <li>
                 <span class="font-semibold">{{ $ticket->evento->titolo ?? '-' }}</span> -
                 {{ $ticket->evento->data ?? '' }}
-                ({{ $ticket->created_at->format('d/m/Y') }})
+                ({{ $ticket->evento && $ticket->evento->data ? \Carbon\Carbon::parse($ticket->evento->data)->format('d/m/Y') : '-' }})
             </li>
         @empty
             <li>Nessuna attività recente.</li>

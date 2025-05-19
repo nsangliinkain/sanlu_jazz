@@ -24,7 +24,6 @@ class Event extends Model
         return $this->hasMany(Ticket::class, 'event_id');
     }
 
-    // Relazione artisti per dashboard admin (molti-a-molti o uno-a-molti, qui dummy per compatibilità)
     public function artisti() {
         return $this->belongsToMany(Artista::class, 'artista_event', 'event_id', 'artista_id');
     }

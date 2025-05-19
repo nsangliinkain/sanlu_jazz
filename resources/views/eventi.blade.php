@@ -31,12 +31,22 @@
                         <p class="text-gray-600 mt-2">{{ $evento->luogo }} - {{ \Carbon\Carbon::parse($evento->data)->format('d M Y') }}</p>
                         <p class="text-indigo-600 font-bold mt-2">€{{ number_format($evento->prezzo, 2, ',', '.') }}</p>
                         <div class="mt-4">
-                            <form action="{{ route('tickets.store', $evento->id) }}" method="POST">
-                                @csrf
-                                <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition w-full">
-                                    Prenota Ora
-                                </button>
-                            </form>
+                            @php
+                                $venduti = \App\Models\Ticket::where('event_id', $evento->id)->count();
+                                $postiDisponibili = $evento->posti_disponibili - $venduti;
+                            @endphp
+
+                            @if ($postiDisponibili > 0)
+                                <form action="{{ route('tickets.store', $evento->id) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition w-full">
+                                        Prenota Ora ({{ $postiDisponibili }} disponibili)
+                                    </button>
+                                </form>
+                            @else
+                                <p class="text-red-600 font-semibold text-center">Posti esauriti</p>
+                            @endif
+
                         </div>
                     </div>
                 </div>
@@ -60,4 +70,21 @@
     <footer class="bg-gray-800 text-white text-center py-6 mt-10">
         © 2025 Sanlu's Jazz. Tutti i diritti riservati.
     </footer>
+
+    @if(session('success') || session('error'))
+        <div id="popup-messaggio" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-40">
+            <div class="bg-white rounded-lg shadow-lg p-8 max-w-sm w-full text-center">
+                <h3 class="text-xl font-bold mb-4">
+                    @if(session('success')) Successo @else Errore @endif
+                </h3>
+                <p class="mb-6 text-gray-700">
+                    {{ session('success') ?? session('error') }}
+                </p>
+                <button onclick="document.getElementById('popup-messaggio').style.display='none'"
+                    class="bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700 transition">
+                    OK
+                </button>
+            </div>
+        </div>
+    @endif
 @endsection

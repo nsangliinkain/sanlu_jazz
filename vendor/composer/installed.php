@@ -3,7 +3,7 @@
         'name' => 'laravel/laravel',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'ba22199eb62d5b47b107dce199107452d59c267a',
+        'reference' => '59aae50b82474914257acbd849879a2bc283a61b',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -58,6 +58,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'doctrine/dbal' => array(
+            'pretty_version' => '4.2.3',
+            'version' => '4.2.3.0',
+            'reference' => '33d2d7fe1269b2301640c44cf2896ea607b30e3e',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../doctrine/dbal',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'doctrine/deprecations' => array(
             'pretty_version' => '1.1.5',
             'version' => '1.1.5.0',
@@ -65,7 +74,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../doctrine/deprecations',
             'aliases' => array(),
-            'dev_requirement' => true,
+            'dev_requirement' => false,
         ),
         'doctrine/inflector' => array(
             'pretty_version' => '2.0.10',
@@ -433,7 +442,7 @@
         'laravel/laravel' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'ba22199eb62d5b47b107dce199107452d59c267a',
+            'reference' => '59aae50b82474914257acbd849879a2bc283a61b',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -804,6 +813,15 @@
             'install_path' => __DIR__ . '/../phpunit/phpunit',
             'aliases' => array(),
             'dev_requirement' => true,
+        ),
+        'psr/cache' => array(
+            'pretty_version' => '3.0.0',
+            'version' => '3.0.0.0',
+            'reference' => 'aa5030cfa5405eccfdcb1083ce040c2cb8d253bf',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../psr/cache',
+            'aliases' => array(),
+            'dev_requirement' => false,
         ),
         'psr/clock' => array(
             'pretty_version' => '1.0.0',

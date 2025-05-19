@@ -23,6 +23,13 @@
                 <p class="text-gray-700"><strong>Luogo:</strong> {{ $ticket->evento->luogo }}</p>
                 <p class="text-gray-700"><strong>Prezzo:</strong> €{{ number_format($ticket->evento->prezzo, 2, ',', '.') }}</p>
                 <p class="text-green-600 mt-2">✅ Acquisto confermato</p>
+                <form action="{{ route('tickets.destroy', $ticket->id) }}" method="POST" onsubmit="return confirm('Sei sicuro di voler cancellare questo biglietto?');">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition mt-2">
+                        Cancella
+                    </button>
+                </form>
             </div>
         @empty
             <p class="text-center col-span-3">Non hai ancora acquistato biglietti.</p>

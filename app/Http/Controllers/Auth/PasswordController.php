@@ -13,17 +13,25 @@ class PasswordController extends Controller
     /**
      * Update the user's password.
      */
-    public function update(Request $request): RedirectResponse
+    public function update(Request $request)
     {
-        $validated = $request->validateWithBag('updatePassword', [
-            'current_password' => ['required', 'current_password'],
-            'password' => ['required', Password::defaults(), 'confirmed'],
+        $request->validate([
+            'current_password' => ['required'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
-        $request->user()->update([
-            'password' => Hash::make($validated['password']),
-        ]);
+        $user = auth()->user();
 
-        return back()->with('status', 'password-updated');
+        // Confronto diretto (dato che la password è salvata in chiaro)
+        if ($request->current_password !== $user->password) {
+            return back()->withErrors(['current_password' => 'La password attuale non è corretta.']);
+        }
+
+        // Nessun Hash::make() — la password sarà salvata in chiaro
+        $user->password = $request->password;
+        $user->save();
+
+        return back()->with('success', 'Password aggiornata con successo.');
     }
+
 }

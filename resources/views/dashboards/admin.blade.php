@@ -49,6 +49,12 @@
                 </ul>
 
                 <p class="text-gray-700"><strong>🎟️ Biglietti venduti:</strong> {{ $evento->tickets->count() }}</p>
+
+                {{-- AGGIUNGI QUESTO BLOCCO --}}
+                <a href="{{ route('admin.eventi.artisti', $evento->id) }}"
+                class="inline-block mt-3 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition">
+                    Assegna artisti
+                </a>
             </div>
         @empty
             <p class="text-center col-span-3">Nessun evento futuro trovato.</p>

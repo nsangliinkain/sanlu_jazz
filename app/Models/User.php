@@ -16,6 +16,7 @@ class User extends Authenticatable
      * @var string
      */
     protected $table = 'users';
+    public $timestamps = false;
 
     /**
      * The primary key for the model.
@@ -66,5 +67,10 @@ class User extends Authenticatable
 
     public function tickets() {
         return $this->hasMany(Ticket::class);
+    }
+
+    public function eventi()
+    {
+        return $this->belongsToMany(Event::class, 'artista_evento', 'artista_id', 'evento_id');
     }
 }
