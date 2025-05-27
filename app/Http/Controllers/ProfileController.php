@@ -15,4 +15,16 @@ class ProfileController extends Controller
             ->get();
         return view('profile.edit', compact('user', 'recentTickets'));
     }
+
+    public function destroy(Request $request)
+    {
+        $user = auth()->user();
+        auth()->logout();
+        $user->delete();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/')->with('status', 'Profilo eliminato con successo.');
+    }
 }

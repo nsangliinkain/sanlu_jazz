@@ -62,18 +62,4 @@ class TicketController extends Controller
         $ticket->delete(); // Questo elimina davvero il record
         return back()->with('success', 'Biglietto cancellato con successo.');
     }
-
-    public function showAssegnaArtisti($eventoId)
-    {
-        $evento = Event::findOrFail($eventoId);
-        $artisti = User::where('ruolo', 'artista')->get();
-        return view('admin.assegna_artisti', compact('evento', 'artisti'));
-    }
-
-    public function assegnaArtisti(Request $request, $eventoId)
-    {
-        $evento = Event::findOrFail($eventoId);
-        $evento->artisti()->sync($request->input('artisti', []));
-        return back()->with('success', 'Artisti assegnati con successo!');
-    }
 }

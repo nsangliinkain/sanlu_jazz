@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdminController;
+use App\Http\Middleware\isAdmin;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/eventi', [HomeController::class, 'eventi'])->name('eventi');
@@ -40,10 +41,13 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/admin', [AdminController::class, 'index'])->middleware('auth', 'is_admin');
 
-Route::middleware(['auth', 'is_admin'])->group(function () {
-    Route::get('/admin/eventi/{evento}/artisti', [AdminController::class, 'showAssegnaArtisti'])->name('admin.eventi.artisti');
-    Route::post('/admin/eventi/{evento}/artisti', [AdminController::class, 'assegnaArtisti'])->name('admin.eventi.artisti.assegna');
-});
+Route::get('/admin/eventi/{evento}/artisti', [AdminController::class, 'showAssegnaArtisti'])
+    ->middleware('auth')
+    ->name('admin.eventi.artisti');
+
+Route::post('/admin/eventi/{evento}/artisti', [AdminController::class, 'assegnaArtista'])
+    ->middleware('auth')
+    ->name('admin.assegna_artisti');
 
 Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
 Route::patch('/profile', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
@@ -53,10 +57,29 @@ Route::delete('/profile', [App\Http\Controllers\ProfileController::class, 'destr
 Route::get('/register/artista', [App\Http\Controllers\Auth\RegisterController::class, 'showArtistRegisterForm'])->name('register.artist');
 Route::post('/register/artista', [App\Http\Controllers\Auth\RegisterController::class, 'registerArtist']);
 
-Route::post('/eventi/{evento}/prenota', [TicketController::class, 'store'])
-    ->middleware('auth')
-    ->name('tickets.store');
 
-Route::delete('/biglietti/{id}', [TicketController::class, 'destroy'])
-    ->middleware('auth')
-    ->name('tickets.destroy');
+
+Route::middleware(['auth'])->group(function (){
+    Route::post('/eventi/{evento}/prenota', [TicketController::class, 'store'])->name('tickets.store');
+    Route::delete('/biglietti/{id}', [TicketController::class, 'destroy'])->name('tickets.destroy');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/artista/eventi/crea', [App\Http\Controllers\ArtistaEventController::class, 'create'])->name('artista.create');
+    Route::post('/artista/eventi', [App\Http\Controllers\ArtistaEventController::class, 'store'])->name('artista.store');
+    Route::get('/artista/eventi', [App\Http\Controllers\ArtistaEventController::class, 'index'])->name('artista.index');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/admin/eventi/richieste', [AdminController::class, 'richiesteEventi'])
+        ->name('admin.richieste');
+
+    Route::get('/admin/eventi/{id}/approva-prezzo', [AdminController::class, 'showPrezzoForm'])
+        ->name('admin.approva.prezzo.form');
+
+    Route::post('/admin/eventi/{evento}/approva', [AdminController::class, 'approvaEvento'])
+        ->name('admin.approva');
+
+    Route::post('/admin/eventi/{evento}/rifiuta', [AdminController::class, 'rifiutaEvento'])
+        ->name('admin.rifiuta');
+});

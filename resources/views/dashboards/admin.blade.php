@@ -28,6 +28,21 @@
                 <p class="text-gray-700"><strong>Stato:</strong> {{ $evento->stato }}</p>
                 <p class="text-gray-700"><strong>Venue:</strong> {{ $evento->venue->nome ?? 'Non specificata' }}</p>
 
+                @if($evento->stato === 'in_attesa')
+                    <div class="flex gap-2 mt-3">
+                        <a href="{{ route('admin.approva.prezzo.form', $evento->id) }}" 
+                            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded inline-block">
+                            Approva
+                        </a>
+                        <form action="{{ route('admin.rifiuta', $evento->id) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">
+                                Rifiuta
+                            </button>
+                        </form>
+                    </div>
+                @endif
+
                 <hr class="my-3">
 
                 <p class="font-semibold text-indigo-700">🎤 Artista:</p>

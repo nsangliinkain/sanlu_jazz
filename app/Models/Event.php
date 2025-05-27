@@ -7,7 +7,24 @@ use App\Models\Genre;
 
 class Event extends Model
 {
-    // Relazione artista: ogni evento appartiene a un utente con ruolo 'artista'
+    protected $fillable = [
+        'titolo',
+        'descrizione',
+        'data',
+        'orario',
+        'luogo',
+        'artista_id',
+        'stato',
+        'prezzo',
+        'posti_disponibili',
+        'img'
+    ];
+    protected $casts = [
+        'data' => 'datetime',
+        'orario' => 'datetime:H:i',
+    ];
+    protected $table = 'events';
+    public $timestamps = false;
     public function artista() {
         return $this->belongsTo(User::class, 'artista_id');
     }
@@ -23,9 +40,4 @@ class Event extends Model
     public function tickets() {
         return $this->hasMany(Ticket::class, 'event_id');
     }
-
-    public function artisti() {
-        return $this->belongsToMany(Artista::class, 'artista_event', 'event_id', 'artista_id');
-    }
-
 }

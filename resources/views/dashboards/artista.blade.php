@@ -14,7 +14,7 @@
 <section class="py-12 px-4 max-w-7xl mx-auto">
     <div class="flex items-center justify-between mb-6">
         <h3 class="text-2xl font-bold">🎷 I tuoi eventi</h3>
-        <a href="#" class="inline-block bg-indigo-600 text-white px-4 py-2 rounded shadow hover:bg-indigo-700 transition">+ Crea nuovo evento</a>
+        <a href="{{ route('artista.create') }}" class="inline-block bg-indigo-600 text-white px-4 py-2 rounded shadow hover:bg-indigo-700 transition">+ Crea nuovo evento</a>
     </div>
     <div class="overflow-x-auto rounded-lg shadow">
         <table class="min-w-full bg-white divide-y divide-gray-200">
@@ -66,23 +66,6 @@
                 @endif
             </tbody>
         </table>
-    </div>
-</section>
-
-<section class="py-8 px-4 max-w-4xl mx-auto">
-    <div class="mb-8">
-        <h3 class="text-xl font-bold mb-2">🔔 Notifiche da admin</h3>
-        <div class="bg-white rounded shadow p-4">
-            {{-- Qui puoi mostrare le notifiche ricevute dall'admin --}}
-            <p class="text-gray-500">Nessuna notifica recente.</p>
-        </div>
-    </div>
-    <div>
-        <h3 class="text-xl font-bold mb-2">💬 Messaggistica</h3>
-        <div class="bg-white rounded shadow p-4">
-            {{-- Qui puoi implementare la messaggistica con admin o locali --}}
-            <p class="text-gray-500">Funzionalità in sviluppo.</p>
-        </div>
     </div>
 </section>
 @endsection

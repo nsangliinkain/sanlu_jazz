@@ -8,6 +8,14 @@ class Venue extends Model
 {
     protected $table = 'venues';
 
+    protected $fillable = [
+        'nome_locale',
+        'indirizzo',
+        'capienza',
+    ];
+
+    public $timestamps = false;
+
     public function events()
     {
         return $this->hasMany(Event::class);

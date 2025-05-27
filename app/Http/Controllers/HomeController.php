@@ -9,13 +9,13 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $eventi = Event::take(3)->get();
+        $eventi = Event::where('stato', 'attivo')->take(3)->get();
         return view('home', compact('eventi'));
     }
 
     public function eventi()
     {   
-        $eventi = Event::all();
+        $eventi = Event::where('stato', 'attivo')->get();
         return view('eventi', compact('eventi'));
     }
 }
