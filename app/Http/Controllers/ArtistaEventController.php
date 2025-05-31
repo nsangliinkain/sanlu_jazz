@@ -60,17 +60,17 @@ class ArtistaEventController extends Controller
         }
 
         Event::create([
+            'artista_id' => auth()->id(),
             'titolo' => $request->titolo,
             'descrizione' => $request->descrizione,
             'data' => $request->data,
-            'artista_id' => auth()->id(),
-            'luogo' => Venue::find($venue_id)->nome_locale,
-            'stato' => 'in_attesa',
             'orario' => $request->orario,
+            'luogo' => Venue::find($venue_id)->nome_locale,
             'prezzo' => null,
             'posti_disponibili' => $postiDisponibili,
-            'image_url' => $request->image_url,
+            'stato' => 'in_attesa',
             'venue_id' => $venue_id,
+            'image_url' => $request->image_url,
         ]);
 
         return redirect()->route('dashboard.artista')->with('success', 'Evento creato e in attesa di approvazione!');

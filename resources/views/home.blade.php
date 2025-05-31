@@ -3,15 +3,9 @@
 
 @section('title', 'Sanlu\'s Jazz - Eventi Musicali')
 
-@section('meta')
-    <meta name="description" content="Scopri eventi jazz dal vivo con Sanlu's Jazz. Concerti, festival e serate indimenticabili.">
-    <meta name="keywords" content="jazz, eventi, concerti jazz, musica dal vivo, festival jazz, Sanlu's Jazz">
-    <link rel="icon" href="/favicon.ico" type="image/x-icon">
-@endsection
-
 @section('content')
     <!-- HERO SECTION MIGLIORATA -->
-    <section class="relative text-white py-24 px-6 text-center bg-cover bg-center" style="background-image: url('https://source.unsplash.com/1600x900/?jazz,stage');">
+    <section class="relative text-white py-24 px-6 text-center bg-cover bg-center">
         <div class="absolute inset-0 bg-indigo-900 bg-opacity-70"></div>
         <div class="relative z-10">
             <h2 class="text-4xl font-bold mb-4">Scopri il meglio della musica dal vivo</h2>

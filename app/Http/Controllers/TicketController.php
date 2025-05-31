@@ -31,9 +31,6 @@ class TicketController extends Controller
         $capienza = $evento->posti_disponibili;
         $venduti = Ticket::where('event_id', $evento->id)->count();
 
-        // Debug temporaneo
-        // dd(['capienza' => $capienza, 'venduti' => $venduti]);
-
         if ($venduti >= $capienza) {
             return back()->with('error', 'Posti esauriti per questo evento.');
         }

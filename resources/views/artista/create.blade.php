@@ -21,9 +21,9 @@
         <textarea name="descrizione" placeholder="Descrizione" class="w-full border rounded p-2" required></textarea>
         <input type="date" name="data" class="w-full border rounded p-2" required>
         <input type="time" name="orario" class="w-full border rounded p-2" required>
-        <textarea name="image_url" placeholder="Link Immagine" class="w-full border rounded p-2" required></textarea>
+        <input type="text" name="image_url" placeholder="Link Immagine" class="w-full border rounded p-2" required>
 
-        <select name="venue_id" id="venue_id" onchange="toggleVenueFields()" class="w-full border rounded p-2">
+        <select name="venue_id" id="venue_id" onchange="toggleVenueFields()" class="w-full border rounded p-2" required>
             <option value="">Seleziona venue esistente</option>
             @foreach($venues as $venue)
                 <option value="{{ $venue->id }}">{{ $venue->nome_locale }}</option>
@@ -45,7 +45,15 @@
         function toggleVenueFields() {
             const select = document.getElementById('venue_id');
             const newVenueFields = document.getElementById('newVenueFields');
-            newVenueFields.style.display = (select.value === 'new') ? 'block' : 'none';
+            const inputs = newVenueFields.querySelectorAll('input');
+
+            if (select.value === 'new') {
+                newVenueFields.style.display = 'block';
+                inputs.forEach(input => input.setAttribute('required', 'required'));
+            } else {
+                newVenueFields.style.display = 'none';
+                inputs.forEach(input => input.removeAttribute('required'));
+            }
         }
     </script>
 </div>

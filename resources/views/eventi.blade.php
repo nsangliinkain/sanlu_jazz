@@ -3,11 +3,6 @@
 
 @section('title', 'Sanlu\'s Jazz - Tutti gli Eventi')
 
-@section('meta')
-    <meta name="description" content="Sfoglia tutti gli eventi jazz dal vivo con Sanlu's Jazz. Concerti, festival e serate indimenticabili.">
-    <meta name="keywords" content="jazz, eventi, concerti jazz, musica dal vivo, festival jazz, calendario eventi, Sanlu's Jazz">
-    <link rel="icon" href="/favicon.ico" type="image/x-icon">
-@endsection
 
 @section('content')
     <!-- HERO SECTION -->

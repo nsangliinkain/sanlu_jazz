@@ -83,3 +83,5 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/admin/eventi/{evento}/rifiuta', [AdminController::class, 'rifiutaEvento'])
         ->name('admin.rifiuta');
 });
+
+Route::delete('/admin/eventi/{evento}', [AdminController::class, 'eliminaEvento'])->name('admin.elimina');

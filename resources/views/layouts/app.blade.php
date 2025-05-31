@@ -8,6 +8,8 @@
 
         <title>@yield('title', config('app.name', 'Laravel'))</title>
 
+        <link rel="icon" type="images/logo" href="/images/logo.png">
+
         <!-- Meta tags personalizzati -->
         @yield('meta')
 

@@ -6,8 +6,9 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ url('/') }}">
-                        <h1 class="text-2xl font-bold text-indigo-600">🎷 Sanlu's Jazz</h1>
+                    <a href="{{ url('/') }}" class="flex items-center gap-2">
+                        <img src="/images/logo.png" alt="Logo Sanlu's Jazz" class="h-10 w-auto">
+                        <h1 class="text-2xl font-bold text-indigo-600">Sanlu's Jazz</h1>
                     </a>
                 </div>
 

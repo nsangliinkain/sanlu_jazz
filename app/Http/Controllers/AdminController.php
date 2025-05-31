@@ -48,7 +48,9 @@ class AdminController extends Controller
         $evento->artista_id = $request->input('artista_id');
         $evento->save();
 
-        return back()->with('success', 'Artista assegnato con successo!');
+        // Redirect back to the event assignment page with a success message
+        return redirect()->route('dashboard.admin', $eventoId)
+            ->with('success', 'Artista assegnato con successo all\'evento.');
     }
 
     public function approvaEvento(Request $request, $eventoId)
@@ -87,5 +89,17 @@ class AdminController extends Controller
         $evento = Event::findOrFail($id);
 
         return view('admin.prezzo', compact('evento'));
+    }
+
+    public function eliminaEvento($eventoId)
+    {
+        if (!auth()->user() || auth()->user()->ruolo !== 'admin') {
+            abort(403, 'Accesso negato');
+        }
+        $evento = \App\Models\Event::findOrFail($eventoId);
+        // Elimina tutti i ticket associati
+        $evento->tickets()->delete();
+        $evento->delete();
+        return back()->with('success', 'Evento eliminato con successo.');
     }
 }
