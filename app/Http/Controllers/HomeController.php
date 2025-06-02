@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Event;
+use App\Models\Genre;
 
 class HomeController extends Controller
 {
@@ -13,9 +14,20 @@ class HomeController extends Controller
         return view('home', compact('eventi'));
     }
 
-    public function eventi()
+    public function eventi(Request $request)
     {   
-        $eventi = Event::where('stato', 'attivo')->get();
-        return view('eventi', compact('eventi'));
+        $generi = Genre::all();
+
+        $query = Event::where('stato', 'attivo');
+
+        if ($request->filled('genere')) {
+            $query->whereHas('genres', function($q) use ($request) {
+                $q->where('genres.id', $request->genere);
+            });
+        }
+
+        $eventi = $query->get();
+
+        return view('eventi', compact('eventi', 'generi'));
     }
 }

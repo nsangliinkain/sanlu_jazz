@@ -102,4 +102,29 @@ class AdminController extends Controller
         $evento->delete();
         return back()->with('success', 'Evento eliminato con successo.');
     }
+
+    public function editEvento($eventoId)
+    {
+        if (!auth()->user() || auth()->user()->ruolo !== 'admin') {
+            abort(403, 'Accesso negato');
+        }
+        $evento = \App\Models\Event::findOrFail($eventoId);
+        return view('admin.edit_evento', compact('evento'));
+    }
+
+    public function updateEvento(Request $request, $eventoId)
+    {
+        if (!auth()->user() || auth()->user()->ruolo !== 'admin') {
+            abort(403, 'Accesso negato');
+        }
+        $evento = \App\Models\Event::findOrFail($eventoId);
+        $evento->update($request->validate([
+            'titolo' => 'required|string|max:255',
+            'descrizione' => 'required|string',
+            'data' => 'required|date',
+            'orario' => 'required',
+            'img' => 'required|string',
+        ]));
+        return redirect()->route('dashboard.admin')->with('success', 'Evento modificato con successo.');
+    }
 }

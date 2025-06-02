@@ -30,7 +30,6 @@
                     <th class="px-4 py-2">Stato</th>
                     <th class="px-4 py-2">Biglietti venduti</th>
                     <th class="px-4 py-2">Incasso (€)</th>
-                    <th class="px-4 py-2">Azioni</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-100">
@@ -52,13 +51,6 @@
                             </td>
                             <td class="px-4 py-2">{{ $e->tickets->count() ?? 0 }}</td>
                             <td class="px-4 py-2">€{{ number_format($e->tickets->sum('prezzo') ?? 0, 2, ',', '.') }}</td>
-                            <td class="px-4 py-2">
-                                @if(strtotime($e->data . ' ' . $e->orario) > time())
-                                    <a href="#" class="text-indigo-600 hover:underline">Modifica</a>
-                                @else
-                                    <span class="text-gray-400 text-xs">Non modificabile</span>
-                                @endif
-                            </td>
                         </tr>
                     @endforeach
                 @else

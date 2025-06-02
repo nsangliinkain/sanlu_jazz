@@ -16,13 +16,37 @@
 
     <!-- TUTTI GLI EVENTI -->
     <section class="py-16 px-6">
-        <h3 class="text-2xl font-bold text-center mb-10">🎫 Calendario Eventi</h3>
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between mb-10">
+            <h3 class="text-2xl font-bold text-center md:text-left mb-4 md:mb-0">🎫 Calendario Eventi</h3>
+            <!-- Filtro Generi: -->
+            <form method="GET" action="{{ route('eventi') }}">
+                <div class="relative group">
+                    <select name="genere" id="genere"
+                        onchange="this.form.submit()"
+                        class="appearance-none bg-gradient-to-r from-white to-indigo-50 border-2 border-indigo-200 rounded-xl px-6 py-3 pr-12 shadow-lg focus:ring-4 focus:ring-indigo-200 focus:border-indigo-400 transition-all duration-300 text-gray-700 hover:shadow-xl font-medium min-w-[200px]">
+                        <option value="">Tutti i generi</option>
+                        @foreach($generi as $genere)
+                            <option value="{{ $genere->id }}" {{ request('genere') == $genere->id ? 'selected' : '' }}>
+                                {{ $genere->nome }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                @if(request('genere'))
+                    <div class="mt-2 text-center">
+                        <a href="{{ route('eventi') }}" class="text-xs text-indigo-600 hover:text-indigo-800 underline">
+                            ✕ Rimuovi filtro
+                        </a>
+                    </div>
+                @endif
+            </form>
+        </div>
         <div class="grid md:grid-cols-3 gap-8">
             @forelse($eventi as $evento)
                 <div class="bg-white rounded-xl shadow hover:shadow-lg transition">
-                    <img src="{{ $evento->image_url }}" alt="{{ $evento->titolo }}" class="rounded-t-xl w-full h-48 object-cover">
                     <div class="p-4">
                         <h4 class="text-xl font-semibold">{{ $evento->titolo }}</h4>
+                        <p class="text-gray-700 mt-2">{{ $evento->descrizione }}</p>
                         <p class="text-gray-600 mt-2">{{ $evento->luogo }} - {{ \Carbon\Carbon::parse($evento->data)->format('d M Y') }}</p>
                         <p class="text-indigo-600 font-bold mt-2">€{{ number_format($evento->prezzo, 2, ',', '.') }}</p>
                         <div class="mt-4">

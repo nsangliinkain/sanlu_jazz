@@ -16,6 +16,9 @@
 </section>
 
 <section class="py-12 px-4 max-w-7xl mx-auto">
+    <a href="{{ route('admin.statistiche') }}" class="inline-block bg-indigo-500 text-white px-4 py-2 rounded shadow hover:bg-indigo-700 transition mb-6">
+        📊 Vai alle Statistiche
+    </a>
     <div class="flex items-center justify-between mb-6">
         <h3 class="text-2xl font-bold">Eventi Futuri</h3>
         <a href="{{ route('artista.create') }}" class="inline-block bg-indigo-600 text-white px-4 py-2 rounded shadow hover:bg-indigo-700 transition">+ Crea nuovo evento</a>
@@ -75,6 +78,11 @@
                 <a href="{{ route('admin.eventi.artisti', $evento->id) }}"
                 class="inline-block mt-3 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition">
                     Assegna artisti
+                </a>
+
+                <a href="{{ route('admin.edit', $evento->id) }}"
+                   class="inline-block mt-3 bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition">
+                    Modifica
                 </a>
 
                 <form action="{{ route('admin.elimina', $evento->id) }}" method="POST" onsubmit="return confirm('Sei sicuro di voler eliminare questo evento?');" class="inline">

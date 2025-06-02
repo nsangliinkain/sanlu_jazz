@@ -18,7 +18,9 @@ class ArtistaEventController extends Controller
     public function create()
     {
         $venues = Venue::all();
-        return view('artista.create', compact('venues'));
+        $generi = \App\Models\Genre::all();
+        $artisti = \App\Models\User::where('ruolo', 'artista')->get();
+        return view('artista.create', compact('venues', 'generi', 'artisti'));
     }
 
     public function store(Request $request)
@@ -29,22 +31,16 @@ class ArtistaEventController extends Controller
             'data' => 'required|date',
             'orario' => 'required|date_format:H:i',
             'posti_disponibili' => 'nullable|required_if:venue_id,new|integer|min:50',
-            'image_url' => 'required|string',
             'nome_locale' => 'nullable|required_if:venue_id,new',
             'indirizzo' => 'nullable|required_if:venue_id,new',
             'capienza' => 'nullable|required_if:venue_id,new|integer|min:100',
-            'venue_id' => [
-                'nullable',
-                function ($attribute, $value, $fail) {
-                    if ($value !== 'new' && !\App\Models\Venue::where('id', $value)->exists()) {
-                        $fail('La venue selezionata non esiste.');
-                    }
-                },
-            ],
+            'venue_id' => 'required',
+            'genere_id' => 'required|integer|exists:genres,id',
         ]);
 
+        // 1. Se venue_id è "new", crea il nuovo venue
         if ($request->venue_id === 'new') {
-            $venue = Venue::create([
+            $venue = \App\Models\Venue::create([
                 'nome_locale' => $request->nome_locale,
                 'indirizzo' => $request->indirizzo,
                 'capienza' => $request->capienza,
@@ -54,26 +50,39 @@ class ArtistaEventController extends Controller
             $venue_id = $request->venue_id;
         }
 
-        $postiDisponibili = $request->posti_disponibili;
-        if ($request->venue_id !== 'new') {
-            $postiDisponibili = Venue::find($request->venue_id)->capienza;
+        // 2. Ottieni il nome del locale
+        if ($request->venue_id === 'new') {
+            $nome_locale = $request->nome_locale;
+            $posti_disponibili = $request->posti_disponibili;
+        } else {
+            $venue_esistente = \App\Models\Venue::find($request->venue_id);
+            $evento_esistente = \App\Models\Event::where('venue_id', $venue_esistente->id);
+            $nome_locale = $venue_esistente->nome_locale;
+            $posti_disponibili = $evento_esistente->posti_disponibili;
         }
 
-        Event::create([
-            'artista_id' => auth()->id(),
+        // 3. Crea l'evento
+        $evento = \App\Models\Event::create([
             'titolo' => $request->titolo,
             'descrizione' => $request->descrizione,
             'data' => $request->data,
             'orario' => $request->orario,
-            'luogo' => Venue::find($venue_id)->nome_locale,
-            'prezzo' => null,
-            'posti_disponibili' => $postiDisponibili,
-            'stato' => 'in_attesa',
             'venue_id' => $venue_id,
-            'image_url' => $request->image_url,
+            'luogo' => $nome_locale,
+            'posti_disponibili' => $posti_disponibili,
+            'artista_id' => $request->artista_id ?? auth()->id(),
+            'stato' => 'in_attesa',
+            'prezzo' => $request->prezzo ?? null,
         ]);
 
-        return redirect()->route('dashboard.artista')->with('success', 'Evento creato e in attesa di approvazione!');
+        // 3. IMPORTANTE: Collega l'evento al genere tramite la tabella pivot
+        $evento->genres()->attach($request->genere_id);
+
+
+        if (auth()->user()->ruolo === 'admin') {
+            return redirect()->route('dashboard.admin')->with('success', 'Evento creato con successo!');
+        }
+        return redirect()->route('dashboard.artista')->with('success', 'Evento creato con successo!');
     }
 
     public function richiesteEventi()

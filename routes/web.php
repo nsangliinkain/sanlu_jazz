@@ -85,3 +85,8 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::delete('/admin/eventi/{evento}', [AdminController::class, 'eliminaEvento'])->name('admin.elimina');
+Route::get('/admin/eventi/{evento}/modifica', [AdminController::class, 'editEvento'])->name('admin.edit');
+Route::put('/admin/eventi/{evento}', [AdminController::class, 'updateEvento'])->name('admin.update');
+Route::get('/admin/statistiche', function () {
+    return view('dashboards.statistiche');
+})->name('admin.statistiche')->middleware('auth');

@@ -15,13 +15,16 @@
         </div>
     @endif
 
+    @php
+        $isAdmin = auth()->user() && auth()->user()->ruolo === 'admin';
+    @endphp
+
     <form action="{{ route('artista.store') }}" method="POST" class="space-y-6">
         @csrf
         <input type="text" name="titolo" placeholder="Titolo" class="w-full border rounded p-2" required>
         <textarea name="descrizione" placeholder="Descrizione" class="w-full border rounded p-2" required></textarea>
         <input type="date" name="data" class="w-full border rounded p-2" required>
         <input type="time" name="orario" class="w-full border rounded p-2" required>
-        <input type="text" name="image_url" placeholder="Link Immagine" class="w-full border rounded p-2" required>
 
         <select name="venue_id" id="venue_id" onchange="toggleVenueFields()" class="w-full border rounded p-2" required>
             <option value="">Seleziona venue esistente</option>
@@ -38,7 +41,24 @@
             <input type="number" name="posti_disponibili" placeholder="Posti Disponibili" class="w-full border rounded p-2 mt-2">
         </div>
 
-        <input type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded transition" value="Invia richiesta evento">
+        <select name="genere_id" class="w-full border rounded p-2" required>
+            <option value="">Seleziona un genere</option>
+            @foreach($generi as $genere)
+            <option value="{{ $genere->id }}">{{ $genere->nome }}</option>
+            @endforeach
+        </select>
+
+        @if($isAdmin)
+            <input type="number" name="prezzo" placeholder="Prezzo (€)" class="w-full border rounded p-2" min="1" step="0.01" required>
+            <select name="artista_id" class="w-full border rounded p-2" required>
+                <option value="">Seleziona artista</option>
+                @foreach($artisti as $artista)
+                    <option value="{{ $artista->id }}">{{ $artista->name }}</option>
+                @endforeach
+            </select>
+        @endif
+
+        <input type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded transition" value="Salva evento">
     </form>
 
     <script>
